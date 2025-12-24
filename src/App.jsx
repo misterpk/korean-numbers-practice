@@ -175,6 +175,7 @@ function App() {
             type={direction === 'koreanToEnglish' ? 'number' : 'text'}
             inputMode={direction === 'koreanToEnglish' ? 'numeric' : 'text'}
             pattern={direction === 'koreanToEnglish' ? '[0-9]*' : undefined}
+            lang={direction === 'englishToKorean' ? 'ko' : undefined}
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
             readOnly={hasAnswered}
