@@ -321,3 +321,6 @@ const KoreanNumbersPractice = () => {
     </div>
   );
 };
+
+// Make component available globally
+window.KoreanNumbersPractice = KoreanNumbersPractice;
