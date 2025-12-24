@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from 'react';
-
 const KoreanNumbersPractice = () => {
   // Native Korean numbers (0-99)
   const nativeKorean = [
