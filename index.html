@@ -1,42 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="description" content="Practice Korean numbers (Native and Sino-Korean) with an interactive quiz app">
-    <title>Korean Numbers Practice</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔢</text></svg>">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #fafafa;
-        }
-        * {
-            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-        }
-    </style>
-</head>
-<body>
+    <title>Korean Numbers Practice</title>
+  </head>
+  <body>
     <div id="root"></div>
-
-    <!-- React and ReactDOM from CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-
-    <!-- Babel Standalone for JSX transformation -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- Your React Component -->
-    <script type="text/babel" src="korean-numbers-practice.jsx"></script>
-
-    <!-- Mount the component -->
-    <script type="text/babel">
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<KoreanNumbersPractice />);
-    </script>
-</body>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
