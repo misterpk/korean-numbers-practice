@@ -47,6 +47,7 @@ function App() {
   const [direction, setDirection] = useState('koreanToEnglish');
   const [minRange, setMinRange] = useState(0);
   const [maxRange, setMaxRange] = useState(10);
+  const [settingsCollapsed, setSettingsCollapsed] = useState(true);
 
   // Quiz state
   const [currentNumber, setCurrentNumber] = useState(null);
@@ -124,20 +125,23 @@ function App() {
     });
     setHasAnswered(true);
 
-    // Auto-advance to next question after showing feedback
-    // Correct: 1 second, Incorrect: 2 seconds (so user can see the answer)
-    const delay = isCorrect ? 1000 : 2000;
-    setTimeout(() => {
-      generateQuestion();
-    }, delay);
+    // Auto-advance only if correct (after 1 second)
+    // If incorrect, wait for user to manually advance so they can review
+    if (isCorrect) {
+      setTimeout(() => {
+        generateQuestion();
+      }, 1000);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!hasAnswered && userAnswer.trim()) {
       checkAnswer();
+    } else if (hasAnswered) {
+      // Allow Enter to advance after answering (useful for incorrect answers)
+      generateQuestion();
     }
-    // Note: Auto-advance is now handled in checkAnswer()
   };
 
   const prompt = direction === 'koreanToEnglish'
@@ -148,133 +152,8 @@ function App() {
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
       <h1 style={{ textAlign: 'center', marginBottom: '30px', fontSize: 'clamp(24px, 6vw, 32px)' }}>Korean Numbers Practice</h1>
 
-      {/* Settings Panel */}
-      <div style={{ backgroundColor: '#f5f5f5', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
-        <h2 style={{ marginTop: 0, fontSize: '18px' }}>Settings</h2>
-
-        {/* Number System Toggle */}
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Number System:</label>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => setNumberSystem('native')}
-              style={{
-                padding: '12px 16px',
-                minHeight: '44px',
-                flex: '1 1 auto',
-                backgroundColor: numberSystem === 'native' ? '#4CAF50' : '#fff',
-                color: numberSystem === 'native' ? '#fff' : '#000',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              Native Korean
-            </button>
-            <button
-              onClick={() => setNumberSystem('sino')}
-              style={{
-                padding: '12px 16px',
-                minHeight: '44px',
-                flex: '1 1 auto',
-                backgroundColor: numberSystem === 'sino' ? '#4CAF50' : '#fff',
-                color: numberSystem === 'sino' ? '#fff' : '#000',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              Sino-Korean
-            </button>
-          </div>
-        </div>
-
-        {/* Direction Toggle */}
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Direction:</label>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => setDirection('koreanToEnglish')}
-              style={{
-                padding: '12px 16px',
-                minHeight: '44px',
-                flex: '1 1 auto',
-                backgroundColor: direction === 'koreanToEnglish' ? '#2196F3' : '#fff',
-                color: direction === 'koreanToEnglish' ? '#fff' : '#000',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              Korean → English
-            </button>
-            <button
-              onClick={() => setDirection('englishToKorean')}
-              style={{
-                padding: '12px 16px',
-                minHeight: '44px',
-                flex: '1 1 auto',
-                backgroundColor: direction === 'englishToKorean' ? '#2196F3' : '#fff',
-                color: direction === 'englishToKorean' ? '#fff' : '#000',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              English → Korean
-            </button>
-          </div>
-        </div>
-
-        {/* Range Settings */}
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Range:</label>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <input
-              type="number"
-              value={minRange}
-              onChange={(e) => setMinRange(e.target.value)}
-              style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-              min="0"
-            />
-            <span>to</span>
-            <input
-              type="number"
-              value={maxRange}
-              onChange={(e) => setMaxRange(e.target.value)}
-              style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-              min="0"
-            />
-          </div>
-        </div>
-
-        {/* Apply Settings Button */}
-        <button
-          onClick={generateQuestion}
-          style={{
-            width: '100%',
-            padding: '12px',
-            minHeight: '44px',
-            fontSize: '16px',
-            backgroundColor: '#FF9800',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            marginTop: '15px'
-          }}
-        >
-          Apply Settings
-        </button>
-      </div>
-
       {/* Quiz Area */}
-      <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '8px', border: '1px solid #ddd' }}>
+      <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '8px', border: '1px solid #ddd', marginBottom: '30px' }}>
         {/* Score */}
         <div style={{ textAlign: 'right', marginBottom: '20px', color: '#666' }}>
           Score: {score.correct} / {score.total}
@@ -294,6 +173,8 @@ function App() {
         <form onSubmit={handleSubmit}>
           <input
             type={direction === 'koreanToEnglish' ? 'number' : 'text'}
+            inputMode={direction === 'koreanToEnglish' ? 'numeric' : 'text'}
+            pattern={direction === 'koreanToEnglish' ? '[0-9]*' : undefined}
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
             readOnly={hasAnswered}
@@ -373,6 +254,152 @@ function App() {
           >
             Next Question
           </button>
+        )}
+      </div>
+
+      {/* Settings Panel - Collapsible */}
+      <div style={{ backgroundColor: '#f5f5f5', borderRadius: '8px', overflow: 'hidden' }}>
+        <button
+          onClick={() => setSettingsCollapsed(!settingsCollapsed)}
+          style={{
+            width: '100%',
+            padding: '15px 20px',
+            backgroundColor: '#e0e0e0',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <span>Settings</span>
+          <span style={{ fontSize: '20px' }}>{settingsCollapsed ? '▼' : '▲'}</span>
+        </button>
+
+        {!settingsCollapsed && (
+          <div style={{ padding: '20px' }}>
+            {/* Number System Toggle */}
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Number System:</label>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setNumberSystem('native')}
+                  style={{
+                    padding: '12px 16px',
+                    minHeight: '44px',
+                    flex: '1 1 auto',
+                    backgroundColor: numberSystem === 'native' ? '#4CAF50' : '#fff',
+                    color: numberSystem === 'native' ? '#fff' : '#000',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                  }}
+                >
+                  Native Korean
+                </button>
+                <button
+                  onClick={() => setNumberSystem('sino')}
+                  style={{
+                    padding: '12px 16px',
+                    minHeight: '44px',
+                    flex: '1 1 auto',
+                    backgroundColor: numberSystem === 'sino' ? '#4CAF50' : '#fff',
+                    color: numberSystem === 'sino' ? '#fff' : '#000',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                  }}
+                >
+                  Sino-Korean
+                </button>
+              </div>
+            </div>
+
+            {/* Direction Toggle */}
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Direction:</label>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setDirection('koreanToEnglish')}
+                  style={{
+                    padding: '12px 16px',
+                    minHeight: '44px',
+                    flex: '1 1 auto',
+                    backgroundColor: direction === 'koreanToEnglish' ? '#2196F3' : '#fff',
+                    color: direction === 'koreanToEnglish' ? '#fff' : '#000',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                  }}
+                >
+                  Korean → English
+                </button>
+                <button
+                  onClick={() => setDirection('englishToKorean')}
+                  style={{
+                    padding: '12px 16px',
+                    minHeight: '44px',
+                    flex: '1 1 auto',
+                    backgroundColor: direction === 'englishToKorean' ? '#2196F3' : '#fff',
+                    color: direction === 'englishToKorean' ? '#fff' : '#000',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                  }}
+                >
+                  English → Korean
+                </button>
+              </div>
+            </div>
+
+            {/* Range Settings */}
+            <div>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Range:</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <input
+                  type="number"
+                  value={minRange}
+                  onChange={(e) => setMinRange(e.target.value)}
+                  style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  min="0"
+                />
+                <span>to</span>
+                <input
+                  type="number"
+                  value={maxRange}
+                  onChange={(e) => setMaxRange(e.target.value)}
+                  style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  min="0"
+                />
+              </div>
+            </div>
+
+            {/* Apply Settings Button */}
+            <button
+              onClick={generateQuestion}
+              style={{
+                width: '100%',
+                padding: '12px',
+                minHeight: '44px',
+                fontSize: '16px',
+                backgroundColor: '#FF9800',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                marginTop: '15px'
+              }}
+            >
+              Apply Settings
+            </button>
+          </div>
         )}
       </div>
     </div>
