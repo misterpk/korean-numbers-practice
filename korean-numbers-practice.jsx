@@ -308,5 +308,3 @@ const KoreanNumbersPractice = () => {
     </div>
   );
 };
-
-export default KoreanNumbersPractice;
