@@ -110,7 +110,7 @@ const KoreanNumbersPractice = () => {
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Korean Numbers Practice</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px', fontSize: 'clamp(24px, 6vw, 32px)' }}>Korean Numbers Practice</h1>
       
       {/* Settings Panel */}
       <div style={{ backgroundColor: '#f5f5f5', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
@@ -119,17 +119,19 @@ const KoreanNumbersPractice = () => {
         {/* Number System Toggle */}
         <div style={{ marginBottom: '15px' }}>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Number System:</label>
-          <div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button
               onClick={() => setNumberSystem('native')}
               style={{
-                padding: '8px 16px',
-                marginRight: '10px',
+                padding: '12px 16px',
+                minHeight: '44px',
+                flex: '1 1 auto',
                 backgroundColor: numberSystem === 'native' ? '#4CAF50' : '#fff',
                 color: numberSystem === 'native' ? '#fff' : '#000',
                 border: '1px solid #ddd',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                fontSize: '16px'
               }}
             >
               Native Korean
@@ -137,12 +139,15 @@ const KoreanNumbersPractice = () => {
             <button
               onClick={() => setNumberSystem('sino')}
               style={{
-                padding: '8px 16px',
+                padding: '12px 16px',
+                minHeight: '44px',
+                flex: '1 1 auto',
                 backgroundColor: numberSystem === 'sino' ? '#4CAF50' : '#fff',
                 color: numberSystem === 'sino' ? '#fff' : '#000',
                 border: '1px solid #ddd',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                fontSize: '16px'
               }}
             >
               Sino-Korean
@@ -153,17 +158,19 @@ const KoreanNumbersPractice = () => {
         {/* Direction Toggle */}
         <div style={{ marginBottom: '15px' }}>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Direction:</label>
-          <div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button
               onClick={() => setDirection('koreanToEnglish')}
               style={{
-                padding: '8px 16px',
-                marginRight: '10px',
+                padding: '12px 16px',
+                minHeight: '44px',
+                flex: '1 1 auto',
                 backgroundColor: direction === 'koreanToEnglish' ? '#2196F3' : '#fff',
                 color: direction === 'koreanToEnglish' ? '#fff' : '#000',
                 border: '1px solid #ddd',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                fontSize: '16px'
               }}
             >
               Korean → English
@@ -171,12 +178,15 @@ const KoreanNumbersPractice = () => {
             <button
               onClick={() => setDirection('englishToKorean')}
               style={{
-                padding: '8px 16px',
+                padding: '12px 16px',
+                minHeight: '44px',
+                flex: '1 1 auto',
                 backgroundColor: direction === 'englishToKorean' ? '#2196F3' : '#fff',
                 color: direction === 'englishToKorean' ? '#fff' : '#000',
                 border: '1px solid #ddd',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                fontSize: '16px'
               }}
             >
               English → Korean
@@ -219,7 +229,7 @@ const KoreanNumbersPractice = () => {
           <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
             {direction === 'koreanToEnglish' ? 'What number is this?' : 'How do you say this in Korean?'}
           </div>
-          <div style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '20px' }}>
+          <div style={{ fontSize: 'clamp(36px, 10vw, 48px)', fontWeight: 'bold', marginBottom: '20px' }}>
             {prompt}
           </div>
         </div>
@@ -235,6 +245,7 @@ const KoreanNumbersPractice = () => {
             style={{
               width: '100%',
               padding: '12px',
+              minHeight: '44px',
               fontSize: '18px',
               borderRadius: '4px',
               border: '2px solid #ddd',
@@ -251,6 +262,7 @@ const KoreanNumbersPractice = () => {
               style={{
                 width: '100%',
                 padding: '12px',
+                minHeight: '44px',
                 fontSize: '16px',
                 backgroundColor: userAnswer.trim() ? '#4CAF50' : '#ccc',
                 color: '#fff',
@@ -291,6 +303,7 @@ const KoreanNumbersPractice = () => {
             style={{
               width: '100%',
               padding: '12px',
+              minHeight: '44px',
               fontSize: '16px',
               backgroundColor: '#2196F3',
               color: '#fff',
