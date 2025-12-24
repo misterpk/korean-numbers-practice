@@ -54,12 +54,40 @@ function App() {
   const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [hasAnswered, setHasAnswered] = useState(false);
+  const [recentNumbers, setRecentNumbers] = useState([]);
 
-  // Generate new question
+  // Generate new question with improved randomization
   const generateQuestion = () => {
     const min = Math.max(0, parseInt(minRange) || 0);
     const max = Math.min(numberSystem === 'native' ? 99 : 9999, parseInt(maxRange) || 10);
-    const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    const range = max - min + 1;
+
+    // If range is very small, just do simple random
+    if (range <= 3) {
+      const randomNum = Math.floor(Math.random() * range) + min;
+      setCurrentNumber(randomNum);
+      setUserAnswer('');
+      setFeedback(null);
+      setHasAnswered(false);
+      return;
+    }
+
+    // Avoid recent numbers (last 5 questions)
+    let randomNum;
+    let attempts = 0;
+    const maxAttempts = 50;
+
+    do {
+      randomNum = Math.floor(Math.random() * range) + min;
+      attempts++;
+    } while (recentNumbers.includes(randomNum) && attempts < maxAttempts);
+
+    // Update recent numbers history (keep last 5)
+    setRecentNumbers(prev => {
+      const updated = [...prev, randomNum];
+      return updated.slice(-5);
+    });
+
     setCurrentNumber(randomNum);
     setUserAnswer('');
     setFeedback(null);
@@ -95,6 +123,13 @@ function App() {
       total: score.total + 1
     });
     setHasAnswered(true);
+
+    // Auto-advance to next question after showing feedback
+    // Correct: 1 second, Incorrect: 2 seconds (so user can see the answer)
+    const delay = isCorrect ? 1000 : 2000;
+    setTimeout(() => {
+      generateQuestion();
+    }, delay);
   };
 
   const handleSubmit = (e) => {
@@ -102,6 +137,7 @@ function App() {
     if (!hasAnswered && userAnswer.trim()) {
       checkAnswer();
     }
+    // Note: Auto-advance is now handled in checkAnswer()
   };
 
   const prompt = direction === 'koreanToEnglish'
@@ -215,6 +251,26 @@ function App() {
             />
           </div>
         </div>
+
+        {/* Apply Settings Button */}
+        <button
+          onClick={generateQuestion}
+          style={{
+            width: '100%',
+            padding: '12px',
+            minHeight: '44px',
+            fontSize: '16px',
+            backgroundColor: '#FF9800',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            marginTop: '15px'
+          }}
+        >
+          Apply Settings
+        </button>
       </div>
 
       {/* Quiz Area */}
@@ -240,7 +296,7 @@ function App() {
             type={direction === 'koreanToEnglish' ? 'number' : 'text'}
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
-            disabled={hasAnswered}
+            readOnly={hasAnswered}
             placeholder="Type your answer..."
             style={{
               width: '100%',
@@ -250,6 +306,8 @@ function App() {
               borderRadius: '4px',
               border: '2px solid #ddd',
               marginBottom: '15px',
+              backgroundColor: hasAnswered ? '#f5f5f5' : '#fff',
+              cursor: hasAnswered ? 'default' : 'text'
             }}
             autoFocus
           />
