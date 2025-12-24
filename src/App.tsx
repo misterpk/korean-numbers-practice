@@ -134,10 +134,10 @@ function App() {
       isCorrect,
       correctAnswer
     });
-    setScore({
-      correct: score.correct + (isCorrect ? 1 : 0),
-      total: score.total + 1
-    });
+    setScore(prevScore => ({
+      correct: prevScore.correct + (isCorrect ? 1 : 0),
+      total: prevScore.total + 1
+    }));
     setHasAnswered(true);
 
     // Auto-advance only if correct (after 1 second)
