@@ -1,4 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react'
+
+type NumberSystem = 'native' | 'sino'
+type Direction = 'koreanToEnglish' | 'englishToKorean'
+
+interface Feedback {
+  isCorrect: boolean
+  correctAnswer: string
+}
+
+interface Score {
+  correct: number
+  total: number
+}
 
 function App() {
   // Native Korean numbers (0-99)
@@ -19,7 +32,7 @@ function App() {
   const sinoKoreanDigits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
   const sinoKoreanUnits = ['', '십', '백', '천'];
 
-  const convertToSinoKorean = (num) => {
+  const convertToSinoKorean = (num: number): string => {
     if (num === 0) return '영';
 
     let result = '';
@@ -43,24 +56,24 @@ function App() {
   };
 
   // Settings state
-  const [numberSystem, setNumberSystem] = useState('native');
-  const [direction, setDirection] = useState('koreanToEnglish');
-  const [minRange, setMinRange] = useState(0);
-  const [maxRange, setMaxRange] = useState(10);
-  const [settingsCollapsed, setSettingsCollapsed] = useState(true);
+  const [numberSystem, setNumberSystem] = useState<NumberSystem>('native');
+  const [direction, setDirection] = useState<Direction>('koreanToEnglish');
+  const [minRange, setMinRange] = useState<number>(0);
+  const [maxRange, setMaxRange] = useState<number>(10);
+  const [settingsCollapsed, setSettingsCollapsed] = useState<boolean>(true);
 
   // Quiz state
-  const [currentNumber, setCurrentNumber] = useState(null);
-  const [userAnswer, setUserAnswer] = useState('');
-  const [feedback, setFeedback] = useState(null);
-  const [score, setScore] = useState({ correct: 0, total: 0 });
-  const [hasAnswered, setHasAnswered] = useState(false);
-  const [recentNumbers, setRecentNumbers] = useState([]);
+  const [currentNumber, setCurrentNumber] = useState<number | null>(null);
+  const [userAnswer, setUserAnswer] = useState<string>('');
+  const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [score, setScore] = useState<Score>({ correct: 0, total: 0 });
+  const [hasAnswered, setHasAnswered] = useState<boolean>(false);
+  const [recentNumbers, setRecentNumbers] = useState<number[]>([]);
 
   // Generate new question with improved randomization
-  const generateQuestion = () => {
-    const min = Math.max(0, parseInt(minRange) || 0);
-    const max = Math.min(numberSystem === 'native' ? 99 : 9999, parseInt(maxRange) || 10);
+  const generateQuestion = (): void => {
+    const min = Math.max(0, minRange || 0);
+    const max = Math.min(numberSystem === 'native' ? 99 : 9999, maxRange || 10);
     const range = max - min + 1;
 
     // If range is very small, just do simple random
@@ -100,7 +113,7 @@ function App() {
     generateQuestion();
   }, []);
 
-  const getKoreanText = (num) => {
+  const getKoreanText = (num: number): string => {
     if (numberSystem === 'native') {
       return num < nativeKorean.length ? nativeKorean[num] : '범위 초과';
     } else {
@@ -108,7 +121,9 @@ function App() {
     }
   };
 
-  const checkAnswer = () => {
+  const checkAnswer = (): void => {
+    if (currentNumber === null) return;
+
     const correctAnswer = direction === 'koreanToEnglish'
       ? currentNumber.toString()
       : getKoreanText(currentNumber);
@@ -134,7 +149,7 @@ function App() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (!hasAnswered && userAnswer.trim()) {
       checkAnswer();
@@ -144,9 +159,9 @@ function App() {
     }
   };
 
-  const prompt = direction === 'koreanToEnglish'
-    ? getKoreanText(currentNumber)
-    : currentNumber;
+  const prompt = currentNumber !== null
+    ? (direction === 'koreanToEnglish' ? getKoreanText(currentNumber) : currentNumber)
+    : '';
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
@@ -177,7 +192,7 @@ function App() {
             pattern={direction === 'koreanToEnglish' ? '[0-9]*' : undefined}
             lang={direction === 'englishToKorean' ? 'ko' : undefined}
             value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
             readOnly={hasAnswered}
             placeholder="Type your answer..."
             style={{
@@ -366,7 +381,7 @@ function App() {
                 <input
                   type="number"
                   value={minRange}
-                  onChange={(e) => setMinRange(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setMinRange(Number(e.target.value))}
                   style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
                   min="0"
                 />
@@ -374,7 +389,7 @@ function App() {
                 <input
                   type="number"
                   value={maxRange}
-                  onChange={(e) => setMaxRange(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setMaxRange(Number(e.target.value))}
                   style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
                   min="0"
                 />

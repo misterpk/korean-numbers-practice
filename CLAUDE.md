@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Korean Numbers Practice is a React-based educational web application for learning Korean number systems. Built with Vite for fast development and optimized production builds.
+Korean Numbers Practice is a React + TypeScript educational web application for learning Korean number systems. Built with Vite for fast development and optimized production builds.
 
 ## Development Setup
 
@@ -53,10 +53,11 @@ npm run deploy
 ```
 korean-numbers-practice/
 ├── src/
-│   ├── main.jsx          # Entry point - renders App to DOM
-│   ├── App.jsx           # Main component with quiz logic
+│   ├── main.tsx          # Entry point - renders App to DOM
+│   ├── App.tsx           # Main component with quiz logic (TypeScript)
 │   └── index.css         # Global styles
 ├── index.html            # HTML template (Vite injects scripts)
+├── tsconfig.json         # TypeScript configuration
 ├── vite.config.js        # Vite configuration
 ├── package.json          # Dependencies and scripts
 └── CLAUDE.md            # This file
@@ -64,13 +65,14 @@ korean-numbers-practice/
 
 ## Architecture
 
-**Build System**: Vite
+**Build System**: Vite + TypeScript
 - Fast HMR (Hot Module Replacement) - see changes instantly
+- TypeScript for type safety and better developer experience
 - ES modules-based development
 - Optimized production builds with code splitting
 
 **Component Structure**
-- `src/App.jsx` - Single-component application containing:
+- `src/App.tsx` - Single-component application (TypeScript) containing:
   - Quiz logic and state management (React hooks)
   - Number conversion algorithms for both Korean number systems
   - Settings and user interactions
@@ -88,14 +90,20 @@ korean-numbers-practice/
 - `checkAnswer()` - Answer validation and scoring
 
 **State Management**
-All state managed via React useState hooks:
-- Settings: `numberSystem`, `direction`, `minRange`, `maxRange`
-- Quiz state: `currentNumber`, `userAnswer`, `feedback`, `score`, `hasAnswered`
+All state managed via React useState hooks with TypeScript types:
+- Settings: `numberSystem: NumberSystem`, `direction: Direction`, `minRange: number`, `maxRange: number`
+- Quiz state: `currentNumber: number | null`, `userAnswer: string`, `feedback: Feedback | null`, `score: Score`, `hasAnswered: boolean`
+
+**TypeScript Types**
+- `NumberSystem`: 'native' | 'sino' - Type for number system selection
+- `Direction`: 'koreanToEnglish' | 'englishToKorean' - Type for quiz direction
+- `Feedback`: { isCorrect: boolean, correctAnswer: string } - Feedback state interface
+- `Score`: { correct: number, total: number } - Score tracking interface
 
 ## Development Workflow
 
 1. **Start dev server**: `npm run dev`
-2. **Edit code**: Make changes to `src/App.jsx` or `src/index.css`
+2. **Edit code**: Make changes to `src/App.tsx` or `src/index.css`
 3. **See changes instantly**: Browser updates automatically (no refresh needed!)
 4. **Deploy**: `npm run deploy` when ready to publish
 
@@ -117,6 +125,7 @@ Deployment is automated via `npm run deploy` which uses gh-pages package.
 
 ## Configuration Notes
 
+- `tsconfig.json`: TypeScript configuration with strict mode enabled
 - `vite.config.js`: Sets `base: '/korean-numbers-practice/'` for GitHub Pages
 - `package.json`: Contains deploy script that builds and publishes to gh-pages branch
-- Vite automatically handles JSX transformation, no Babel config needed
+- Vite automatically handles TypeScript and JSX transformation, no additional config needed
