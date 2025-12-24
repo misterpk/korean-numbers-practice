@@ -1,4 +1,6 @@
 const KoreanNumbersPractice = () => {
+  const { useState, useEffect } = React;
+
   // Native Korean numbers (0-99)
   const nativeKorean = [
     '영', '하나', '둘', '셋', '넷', '다섯', '여섯', '일곱', '여덟', '아홉', '열',
