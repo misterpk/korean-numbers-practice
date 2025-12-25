@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { getKoreanText } from './utils/koreanNumbers';
@@ -195,8 +195,10 @@ describe('App Component', () => {
 
       expect(screen.getByText('✓ Correct!')).toBeInTheDocument();
 
-      // Fast-forward time by 1 second
-      jest.advanceTimersByTime(1000);
+      // Fast-forward time by 1 second (wrapped in act to avoid warnings)
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
 
       // Should have generated a new question (feedback should be gone)
       await waitFor(() => {
