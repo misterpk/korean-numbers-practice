@@ -41,6 +41,12 @@ npm test:watch
 
 # Run tests with coverage report
 npm test:coverage
+
+# Run specific test types (faster iteration)
+npm run test:unit              # Unit tests only (53 tests)
+npm run test:integration       # Integration tests only (22 tests)
+npm run test:unit:watch        # Unit tests in watch mode
+npm run test:integration:watch # Integration tests in watch mode
 ```
 
 **End-to-End Tests (Playwright)**
@@ -131,9 +137,9 @@ korean-numbers-practice/
 - Optimized production builds with code splitting
 
 **Testing**: Multi-layered testing strategy
-- **Jest + React Testing Library**: 75 unit and integration tests
-  - Unit tests for Korean number conversion logic
-  - Integration tests for React component behavior
+- **Jest + React Testing Library**: 75 unit and integration tests (53 unit + 22 integration)
+  - Unit tests for Korean number conversion logic (53 tests)
+  - Integration tests for React component behavior (22 tests)
   - Configured with ts-jest for TypeScript support
   - Test utilities extracted to separate modules for better testability
 - **Playwright**: ~40 end-to-end tests across 6 test suites
@@ -181,14 +187,14 @@ All state managed via React useState hooks with TypeScript types:
 ## Testing Strategy
 
 **Test Organization**
-- **Unit Tests**: `src/utils/koreanNumbers.test.ts` (69 tests)
+- **Unit Tests**: `src/utils/koreanNumbers.test.ts` (53 tests)
   - Tests for `convertToSinoKorean()` covering edge cases, single digits, tens, hundreds, thousands
   - Tests for numbers with zeros (101, 1001, etc.)
   - Validation of `nativeKorean` array
   - Tests for `getKoreanText()` with both number systems
   - Tests for `getMaxNumber()` helper
 
-- **Integration Tests**: `src/App.test.tsx` (6 tests)
+- **Integration Tests**: `src/App.test.tsx` (22 tests)
   - Initial render and UI state
   - Settings panel interactions
   - Quiz flow: submitting answers, scoring, feedback
