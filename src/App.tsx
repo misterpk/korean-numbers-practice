@@ -155,7 +155,16 @@ function App() {
               border: '2px solid #ddd',
               marginBottom: '15px',
               backgroundColor: hasAnswered ? '#f5f5f5' : '#fff',
-              cursor: hasAnswered ? 'default' : 'text'
+              cursor: hasAnswered ? 'default' : 'text',
+              outline: 'none'
+            }}
+            onFocus={(e) => {
+              e.target.style.boxShadow = '0 0 0 3px rgba(33, 150, 243, 0.3)';
+              e.target.style.borderColor = '#2196F3';
+            }}
+            onBlur={(e) => {
+              e.target.style.boxShadow = 'none';
+              e.target.style.borderColor = '#ddd';
             }}
             autoFocus
           />
@@ -174,7 +183,16 @@ function App() {
                 border: 'none',
                 borderRadius: '4px',
                 cursor: userAnswer.trim() ? 'pointer' : 'not-allowed',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                outline: 'none'
+              }}
+              onFocus={(e) => {
+                if (userAnswer.trim()) {
+                  e.target.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.3)';
+                }
+              }}
+              onBlur={(e) => {
+                e.target.style.boxShadow = 'none';
               }}
             >
               Submit
@@ -202,9 +220,10 @@ function App() {
         )}
 
         {/* Next Button */}
-        {hasAnswered && (
+        {hasAnswered && !feedback?.isCorrect && (
           <button
             onClick={generateQuestion}
+            autoFocus
             style={{
               width: '100%',
               padding: '12px',
@@ -216,7 +235,14 @@ function App() {
               borderRadius: '4px',
               cursor: 'pointer',
               fontWeight: 'bold',
-              marginTop: '15px'
+              marginTop: '15px',
+              outline: 'none'
+            }}
+            onFocus={(e) => {
+              e.target.style.boxShadow = '0 0 0 3px rgba(33, 150, 243, 0.3)';
+            }}
+            onBlur={(e) => {
+              e.target.style.boxShadow = 'none';
             }}
           >
             Next Question
@@ -238,7 +264,14 @@ function App() {
             fontWeight: 'bold',
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center'
+            alignItems: 'center',
+            outline: 'none'
+          }}
+          onFocus={(e) => {
+            e.target.style.boxShadow = '0 0 0 3px rgba(0, 0, 0, 0.2)';
+          }}
+          onBlur={(e) => {
+            e.target.style.boxShadow = 'none';
           }}
         >
           <span>Settings</span>
@@ -262,7 +295,14 @@ function App() {
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.3)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.boxShadow = 'none';
                   }}
                 >
                   Native Korean
@@ -278,7 +318,14 @@ function App() {
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.3)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.boxShadow = 'none';
                   }}
                 >
                   Sino-Korean
@@ -301,7 +348,14 @@ function App() {
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.boxShadow = '0 0 0 3px rgba(33, 150, 243, 0.3)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.boxShadow = 'none';
                   }}
                 >
                   Korean → English
@@ -317,7 +371,14 @@ function App() {
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.boxShadow = '0 0 0 3px rgba(33, 150, 243, 0.3)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.boxShadow = 'none';
                   }}
                 >
                   English → Korean
@@ -361,7 +422,14 @@ function App() {
                 borderRadius: '4px',
                 cursor: 'pointer',
                 fontWeight: 'bold',
-                marginTop: '15px'
+                marginTop: '15px',
+                outline: 'none'
+              }}
+              onFocus={(e) => {
+                e.target.style.boxShadow = '0 0 0 3px rgba(255, 152, 0, 0.3)';
+              }}
+              onBlur={(e) => {
+                e.target.style.boxShadow = 'none';
               }}
             >
               Apply Settings

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openSettings, changeRange, applySettings, clickNextQuestion } from './helpers';
+import { openSettings, changeRange, changeDirection, applySettings, clickNextQuestion } from './helpers';
 
 test.describe('Edge Cases', () => {
   test('should handle empty input gracefully (Submit button disabled)', async ({ page }) => {
@@ -27,13 +27,24 @@ test.describe('Edge Cases', () => {
   test('should trim whitespace from answers', async ({ page }) => {
     await page.goto('/');
 
-    // Get current question and answer with extra whitespace
+    // Switch to English→Korean direction (text input, not number input)
+    // Number inputs handle whitespace differently across browsers
+    await openSettings(page);
+    await changeDirection(page, 'englishToKorean');
+    await applySettings(page);
+
+    const settingsButton = page.getByRole('button', { name: /^Settings/ });
+    await settingsButton.click();
+
+    // Get the current question number and add whitespace to Korean answer
     const input = page.getByPlaceholder('Type your answer...');
 
-    // Answer with leading/trailing spaces
-    await input.fill('   5   ');
+    // Use a Korean answer with leading/trailing spaces
+    await input.fill('   하나   '); // "one" in Korean with whitespace
 
+    // Wait for Submit button to be enabled (whitespace should be trimmed)
     const submitButton = page.getByRole('button', { name: 'Submit' });
+    await expect(submitButton).toBeEnabled();
     await submitButton.click();
 
     // Should process the answer (whitespace shouldn't prevent submission)
@@ -53,8 +64,8 @@ test.describe('Edge Cases', () => {
     // Should generate a question
     await expect(page.getByPlaceholder('Type your answer...')).toBeVisible();
 
-    // Set range starting at max
-    await openSettings(page);
+    // Settings panel should still be open after applying settings
+    // So we can just change the range again without reopening settings
     await changeRange(page, 99, 99);
     await applySettings(page);
 

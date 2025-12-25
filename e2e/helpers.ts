@@ -36,7 +36,8 @@ export async function getScore(page: Page): Promise<{ correct: number; total: nu
  * Open the settings panel
  */
 export async function openSettings(page: Page) {
-  const settingsButton = page.getByRole('button', { name: 'Settings' });
+  // Match Settings button with icon (not "Apply Settings")
+  const settingsButton = page.getByRole('button', { name: /^Settings/ });
   await settingsButton.click();
 
   // Wait for settings panel to be visible
