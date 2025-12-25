@@ -56,6 +56,21 @@ npm run test:e2e:headed
 
 # Show HTML test report from last run
 npm run test:e2e:report
+
+# Test specific browsers (faster iteration)
+npm run test:e2e:chromium    # Chromium only
+npm run test:e2e:firefox     # Firefox only
+npm run test:e2e:webkit      # WebKit (Safari) only
+
+# Test browser groups
+npm run test:e2e:desktop     # All desktop browsers
+npm run test:e2e:mobile      # Mobile Chrome + Mobile Safari
+
+# Test Chrome ecosystem (desktop + mobile)
+npm run test:e2e:chrome      # Chromium + Mobile Chrome
+
+# Test Safari ecosystem (desktop + mobile)
+npm run test:e2e:safari      # WebKit + Mobile Safari
 ```
 
 ### Building for Production
@@ -270,6 +285,15 @@ npm run test:e2e:headed
 
 # View HTML report from last run
 npm run test:e2e:report
+
+# Test specific browsers for faster iteration
+npm run test:e2e:chromium    # Chromium only (~52 tests)
+npm run test:e2e:firefox     # Firefox only (~52 tests)
+npm run test:e2e:webkit      # WebKit/Safari only (~52 tests)
+npm run test:e2e:desktop     # All desktop browsers (~156 tests)
+npm run test:e2e:mobile      # Mobile viewports only (~104 tests)
+npm run test:e2e:chrome      # Chrome ecosystem (~104 tests)
+npm run test:e2e:safari      # Safari ecosystem (~104 tests)
 ```
 
 ## Development Workflow
