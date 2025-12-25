@@ -175,7 +175,11 @@ korean-numbers-practice/
 
 **State Management**
 All state managed via React useState hooks with TypeScript types:
-- Settings: `numberSystem: NumberSystem`, `direction: Direction`, `minRange: number`, `maxRange: number`
+- **Active Settings** (used for quiz generation): `numberSystem`, `direction`, `minRange`, `maxRange`
+- **Pending Settings** (edited in settings panel): `pendingNumberSystem`, `pendingDirection`, `pendingMinRange`, `pendingMaxRange`
+  - Settings changes are not applied to the quiz until "Apply Settings" button is clicked
+  - When settings panel opens, pending settings sync with active settings
+  - This allows users to configure multiple settings at once before applying
 - Quiz state: `currentNumber: number | null`, `userAnswer: string`, `feedback: Feedback | null`, `score: Score`, `hasAnswered: boolean`
 
 **TypeScript Types**

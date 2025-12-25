@@ -14,11 +14,18 @@ interface Score {
 }
 
 function App() {
-  // Settings state
+  // Active settings (used for quiz generation)
   const [numberSystem, setNumberSystem] = useState<NumberSystem>('native');
   const [direction, setDirection] = useState<Direction>('koreanToEnglish');
   const [minRange, setMinRange] = useState<number>(0);
   const [maxRange, setMaxRange] = useState<number>(10);
+
+  // Pending settings (edited in settings panel, applied on button click)
+  const [pendingNumberSystem, setPendingNumberSystem] = useState<NumberSystem>('native');
+  const [pendingDirection, setPendingDirection] = useState<Direction>('koreanToEnglish');
+  const [pendingMinRange, setPendingMinRange] = useState<number>(0);
+  const [pendingMaxRange, setPendingMaxRange] = useState<number>(10);
+
   const [settingsCollapsed, setSettingsCollapsed] = useState<boolean>(true);
 
   // Quiz state
@@ -108,6 +115,16 @@ function App() {
       // Allow Enter to advance after answering (useful for incorrect answers)
       generateQuestion();
     }
+  };
+
+  const applySettings = (): void => {
+    // Apply pending settings to active settings
+    setNumberSystem(pendingNumberSystem);
+    setDirection(pendingDirection);
+    setMinRange(pendingMinRange);
+    setMaxRange(pendingMaxRange);
+    // Generate new question with updated settings
+    generateQuestion();
   };
 
   const prompt = currentNumber !== null
@@ -253,7 +270,16 @@ function App() {
       {/* Settings Panel - Collapsible */}
       <div style={{ backgroundColor: '#f5f5f5', borderRadius: '8px', overflow: 'hidden' }}>
         <button
-          onClick={() => setSettingsCollapsed(!settingsCollapsed)}
+          onClick={() => {
+            if (settingsCollapsed) {
+              // Sync pending settings with active settings when opening
+              setPendingNumberSystem(numberSystem);
+              setPendingDirection(direction);
+              setPendingMinRange(minRange);
+              setPendingMaxRange(maxRange);
+            }
+            setSettingsCollapsed(!settingsCollapsed);
+          }}
           style={{
             width: '100%',
             padding: '15px 20px',
@@ -285,13 +311,13 @@ function App() {
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Number System:</label>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <button
-                  onClick={() => setNumberSystem('native')}
+                  onClick={() => setPendingNumberSystem('native')}
                   style={{
                     padding: '12px 16px',
                     minHeight: '44px',
                     flex: '1 1 auto',
-                    backgroundColor: numberSystem === 'native' ? '#4CAF50' : '#fff',
-                    color: numberSystem === 'native' ? '#fff' : '#000',
+                    backgroundColor: pendingNumberSystem === 'native' ? '#4CAF50' : '#fff',
+                    color: pendingNumberSystem === 'native' ? '#fff' : '#000',
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -308,13 +334,13 @@ function App() {
                   Native Korean
                 </button>
                 <button
-                  onClick={() => setNumberSystem('sino')}
+                  onClick={() => setPendingNumberSystem('sino')}
                   style={{
                     padding: '12px 16px',
                     minHeight: '44px',
                     flex: '1 1 auto',
-                    backgroundColor: numberSystem === 'sino' ? '#4CAF50' : '#fff',
-                    color: numberSystem === 'sino' ? '#fff' : '#000',
+                    backgroundColor: pendingNumberSystem === 'sino' ? '#4CAF50' : '#fff',
+                    color: pendingNumberSystem === 'sino' ? '#fff' : '#000',
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -338,13 +364,13 @@ function App() {
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Direction:</label>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <button
-                  onClick={() => setDirection('koreanToEnglish')}
+                  onClick={() => setPendingDirection('koreanToEnglish')}
                   style={{
                     padding: '12px 16px',
                     minHeight: '44px',
                     flex: '1 1 auto',
-                    backgroundColor: direction === 'koreanToEnglish' ? '#2196F3' : '#fff',
-                    color: direction === 'koreanToEnglish' ? '#fff' : '#000',
+                    backgroundColor: pendingDirection === 'koreanToEnglish' ? '#2196F3' : '#fff',
+                    color: pendingDirection === 'koreanToEnglish' ? '#fff' : '#000',
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -361,13 +387,13 @@ function App() {
                   Korean → English
                 </button>
                 <button
-                  onClick={() => setDirection('englishToKorean')}
+                  onClick={() => setPendingDirection('englishToKorean')}
                   style={{
                     padding: '12px 16px',
                     minHeight: '44px',
                     flex: '1 1 auto',
-                    backgroundColor: direction === 'englishToKorean' ? '#2196F3' : '#fff',
-                    color: direction === 'englishToKorean' ? '#fff' : '#000',
+                    backgroundColor: pendingDirection === 'englishToKorean' ? '#2196F3' : '#fff',
+                    color: pendingDirection === 'englishToKorean' ? '#fff' : '#000',
                     border: '1px solid #ddd',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -392,16 +418,16 @@ function App() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <input
                   type="number"
-                  value={minRange}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setMinRange(Number(e.target.value))}
+                  value={pendingMinRange}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPendingMinRange(Number(e.target.value))}
                   style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
                   min="0"
                 />
                 <span>to</span>
                 <input
                   type="number"
-                  value={maxRange}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setMaxRange(Number(e.target.value))}
+                  value={pendingMaxRange}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPendingMaxRange(Number(e.target.value))}
                   style={{ width: '80px', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
                   min="0"
                 />
@@ -410,7 +436,7 @@ function App() {
 
             {/* Apply Settings Button */}
             <button
-              onClick={generateQuestion}
+              onClick={applySettings}
               style={{
                 width: '100%',
                 padding: '12px',

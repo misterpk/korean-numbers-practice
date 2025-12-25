@@ -102,7 +102,11 @@ describe('App Component', () => {
       const directionButton = screen.getByRole('button', { name: 'English → Korean' });
       await user.click(directionButton);
 
-      // The question prompt should change
+      // Apply settings to activate the change
+      const applyButton = screen.getByRole('button', { name: 'Apply Settings' });
+      await user.click(applyButton);
+
+      // The question prompt should change after Apply
       await user.click(settingsButton); // Collapse settings to see main quiz
       expect(screen.getByText('How do you say this in Korean?')).toBeInTheDocument();
     });
