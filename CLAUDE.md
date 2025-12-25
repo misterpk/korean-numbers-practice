@@ -206,8 +206,37 @@ All state managed via React useState hooks with TypeScript types:
 - Utilities are extracted to separate modules for easier testing
 - Use `fireEvent` for simple interactions, `waitFor` for async assertions
 - Mock `Math.random()` to control question generation in tests
-- Use fake timers for testing auto-advance behavior
+- **Testing with Fake Timers**: When using `jest.useFakeTimers()` and advancing time, wrap timer operations in `act()` to avoid warnings:
+  ```typescript
+  import { act } from '@testing-library/react';
+
+  // Correct - no warnings
+  act(() => {
+    jest.advanceTimersByTime(1000);
+  });
+
+  // Incorrect - causes "not wrapped in act()" warnings
+  jest.advanceTimersByTime(1000);
+  ```
+- **TypeScript Configuration**: `esModuleInterop: true` is enabled in `tsconfig.json` to ensure proper module interoperability with Jest/ts-jest
 - All tests use TypeScript for type safety
+
+**Common Testing Issues & Solutions**
+
+1. **"Warning: not wrapped in act(...)"**
+   - **Cause**: State updates triggered by timers, promises, or async operations
+   - **Solution**: Wrap the operation in `act()` from `@testing-library/react`
+   - **Example**: See "Testing with Fake Timers" above
+
+2. **"ts-jest TS151001: esModuleInterop warning"**
+   - **Cause**: TypeScript module system mismatch with Jest
+   - **Solution**: Already configured - `esModuleInterop: true` in `tsconfig.json`
+   - **If issue persists**: Check that ts-jest is using the correct tsconfig
+
+3. **Flaky tests with timers**
+   - **Cause**: Real timers mixed with fake timers
+   - **Solution**: Use `jest.useFakeTimers()` at start, `jest.useRealTimers()` at end
+   - **Tip**: Always clean up timers in test cleanup
 
 **Running Unit/Integration Tests**
 ```bash
