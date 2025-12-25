@@ -30,8 +30,10 @@ npm run dev
 ```
 
 ### Testing
+
+**Unit & Integration Tests (Jest)**
 ```bash
-# Run all tests once
+# Run all unit/integration tests once
 npm test
 
 # Run tests in watch mode (auto-reruns on file changes)
@@ -39,6 +41,21 @@ npm test:watch
 
 # Run tests with coverage report
 npm test:coverage
+```
+
+**End-to-End Tests (Playwright)**
+```bash
+# Run all E2E tests (starts dev server automatically)
+npm run test:e2e
+
+# Run E2E tests with interactive UI mode
+npm run test:e2e:ui
+
+# Run E2E tests with browser visible (headed mode)
+npm run test:e2e:headed
+
+# Show HTML test report from last run
+npm run test:e2e:report
 ```
 
 ### Building for Production
@@ -73,8 +90,17 @@ korean-numbers-practice/
 │   └── utils/
 │       ├── koreanNumbers.ts          # Korean number conversion utilities
 │       └── koreanNumbers.test.ts     # Unit tests for utilities
+├── e2e/
+│   ├── helpers.ts                    # E2E test utility functions
+│   ├── quiz-flow.spec.ts             # Quiz flow E2E tests
+│   ├── settings.spec.ts              # Settings panel E2E tests
+│   ├── score-tracking.spec.ts        # Score tracking E2E tests
+│   ├── mobile-responsiveness.spec.ts # Mobile viewport E2E tests
+│   ├── accessibility.spec.ts         # Accessibility E2E tests
+│   └── edge-cases.spec.ts            # Edge case E2E tests
 ├── index.html                        # HTML template (Vite injects scripts)
 ├── jest.config.js                    # Jest testing configuration
+├── playwright.config.ts              # Playwright E2E testing configuration
 ├── tsconfig.json                     # TypeScript configuration
 ├── vite.config.js                    # Vite configuration
 ├── package.json                      # Dependencies and scripts
@@ -89,12 +115,18 @@ korean-numbers-practice/
 - ES modules-based development
 - Optimized production builds with code splitting
 
-**Testing**: Jest + React Testing Library
-- 75 comprehensive tests covering utilities and UI interactions
-- Unit tests for Korean number conversion logic
-- Integration tests for React component behavior
-- Configured with ts-jest for TypeScript support
-- Test utilities extracted to separate modules for better testability
+**Testing**: Multi-layered testing strategy
+- **Jest + React Testing Library**: 75 unit and integration tests
+  - Unit tests for Korean number conversion logic
+  - Integration tests for React component behavior
+  - Configured with ts-jest for TypeScript support
+  - Test utilities extracted to separate modules for better testability
+- **Playwright**: ~40 end-to-end tests across 6 test suites
+  - Full user workflow testing in real browsers (Chromium, Firefox, WebKit)
+  - Mobile viewport testing (iPhone, Android, iPad)
+  - Accessibility testing (keyboard navigation, ARIA, contrast)
+  - Cross-browser compatibility validation
+  - Automatically starts dev server for testing
 
 **Component Structure**
 - `src/App.tsx` - Main React component (TypeScript) containing:
@@ -156,7 +188,7 @@ All state managed via React useState hooks with TypeScript types:
 - Use fake timers for testing auto-advance behavior
 - All tests use TypeScript for type safety
 
-**Running Tests**
+**Running Unit/Integration Tests**
 ```bash
 # Run all tests (recommended before committing)
 npm test
@@ -168,13 +200,87 @@ npm test:watch
 npm test:coverage
 ```
 
+### End-to-End Testing with Playwright
+
+**E2E Test Organization** (~40 tests across 6 suites)
+
+- **Quiz Flow Tests** (`e2e/quiz-flow.spec.ts`)
+  - Complete quiz workflows for Korean→English and English→Korean
+  - Answer validation (correct/incorrect)
+  - Auto-advance after correct answers (1 second delay)
+  - Manual advance after incorrect answers
+  - Score updates and feedback display
+
+- **Settings Panel Tests** (`e2e/settings.spec.ts`)
+  - Expand/collapse settings panel
+  - Switch between Native Korean and Sino-Korean systems
+  - Switch quiz direction
+  - Update number range and apply settings
+  - Settings persistence across questions
+
+- **Score Tracking Tests** (`e2e/score-tracking.spec.ts`)
+  - Score initialization (0/0)
+  - Score increments for correct/incorrect answers
+  - Mixed results tracking
+  - Score persistence when changing settings
+  - Percentage calculation over multiple questions
+
+- **Mobile Responsiveness Tests** (`e2e/mobile-responsiveness.spec.ts`)
+  - Mobile viewport display (iPhone, Pixel)
+  - Touch-friendly buttons (44px minimum)
+  - Numeric keyboard for Korean→English mode
+  - Text/Korean keyboard for English→Korean mode
+  - Tablet viewport testing (iPad)
+
+- **Accessibility Tests** (`e2e/accessibility.spec.ts`)
+  - Proper heading structure (H1)
+  - Accessible form controls and labels
+  - Keyboard navigation (Tab, Enter)
+  - Visible focus indicators
+  - Color contrast for feedback messages
+  - Semantic HTML structure
+
+- **Edge Cases Tests** (`e2e/edge-cases.spec.ts`)
+  - Empty input handling (disabled submit button)
+  - Whitespace trimming
+  - Range boundary values (0-99 for Native)
+  - Very small ranges (0-3)
+  - Single number range
+  - Rapid submissions
+  - Switching number systems mid-quiz
+
+**E2E Test Best Practices**
+- Tests run in real browsers (Chromium, Firefox, WebKit)
+- Helper functions in `e2e/helpers.ts` for common actions
+- Playwright automatically starts/stops dev server
+- Screenshots captured on test failures
+- HTML reports generated for test results
+- Tests validate real user workflows end-to-end
+
+**Running E2E Tests**
+```bash
+# Run all E2E tests (recommended before deploying)
+npm run test:e2e
+
+# Run E2E tests with interactive UI (great for debugging)
+npm run test:e2e:ui
+
+# Run E2E tests with browser visible (see what's happening)
+npm run test:e2e:headed
+
+# View HTML report from last run
+npm run test:e2e:report
+```
+
 ## Development Workflow
 
 1. **Start dev server**: `npm run dev`
 2. **Edit code**: Make changes to `src/App.tsx`, utilities, or styles
 3. **Run tests**: `npm test:watch` in another terminal for continuous testing
 4. **See changes instantly**: Browser updates automatically (no refresh needed!)
-5. **Verify tests pass**: All tests should pass before deploying
+5. **Verify all tests pass**:
+   - Unit/Integration: `npm test`
+   - E2E: `npm run test:e2e` (tests full workflows in real browsers)
 6. **Deploy**: `npm run deploy` when ready to publish
 
 ## Key Features
